@@ -47,6 +47,9 @@
   .rec ul{margin:6px 0 0;padding-left:18px}
   .rec li{margin:4px 0;font-size:.88rem;color:var(--ink)}
   .legend{font-size:.8rem;color:var(--muted);margin-top:8px}
+  #pie{display:flex;flex-direction:column;align-items:center;margin:16px 0}
+  #pie svg{max-width:240px}
+  .pielabel{font-size:.8rem;color:var(--muted);text-align:center;margin-top:4px}
   #review{margin-top:20px}
   a{color:var(--accent)}
   footer{margin-top:30px;color:var(--muted);font-size:.8rem;text-align:center}
@@ -85,6 +88,7 @@
     <h2>Result</h2>
     <div class="big"><span id="scnum">0</span><span style="font-size:1rem;color:var(--muted)"> / 70</span></div>
     <div id="verdict" class="legend"></div>
+    <div id="pie"></div>
     <div class="break" id="breakdown"></div>
     <div id="recommend" class="rec"></div>
     <div class="legend">Self-made practice set, not an official assessment. Use to self-audit weak domains.</div>
@@ -420,7 +424,27 @@ function endExam(){
   rec.innerHTML = '<h3>Focus area: '+g.title+' &mdash; '+dom[weak].c+'/'+dom[weak].t+' correct ('+Math.round(weakPct)+'%)</h3><div style="font-size:.85rem;color:var(--muted);margin-bottom:6px">Key points to study:</div><ul>'+lis+'</ul>';
   rec.classList.add('show');
   sc.scrollIntoView({behavior:'smooth'});
+  renderPie(dom, pct);
   showReview();
+}
+function renderPie(dom, pct){
+  const colors={F:'#3b82f6',I:'#22c55e',A:'#f59e0b',C:'#3b82f6',O:'#22c55e',S:'#ef4444',V:'#a855f7',P:'#14b8a6',D:'#eab308',G:'#ec4899'};
+  const segs=Object.keys(DOMAINS).map(k=>({k,label:DOMAINS[k].label,t:dom[k].t,c:dom[k].c}));
+  const total=segs.reduce((s,x)=>s+x.t,0)||1;
+  const R=70,C=85,sw=34,circ=2*Math.PI*R;
+  let off=0; let arcs='';
+  segs.forEach(s=>{
+    const frac=s.t/total; const len=frac*circ;
+    const correctFrac=s.t?s.c/s.t:0; const clen=len*correctFrac;
+    const col=colors[s.k]||'#3b82f6';
+    arcs+=`<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-dasharray="${clen} ${circ-clen}" stroke-dashoffset="${-off}"/>`;
+    arcs+=`<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${col}" stroke-opacity="0.28" stroke-width="${sw}" stroke-dasharray="${len-clen} ${circ-(len-clen)}" stroke-dashoffset="${-off-clen}"/>`;
+    off+=len;
+  });
+  const legend=segs.map(s=>`<span style="font-size:.78rem;color:var(--muted)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${colors[s.k]||'#3b82f6'};margin-right:5px"></span>${s.label}: ${s.c}/${s.t}</span>`).join('  ');
+  document.getElementById('pie').innerHTML =
+    `<svg viewBox="0 0 170 170" width="240" height="240"><circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(--line)" stroke-width="${sw}"/>${arcs}<text x="${C}" y="${C-4}" text-anchor="middle" fill="var(--ink)" font-size="26" font-weight="700">${pct}%</text><text x="${C}" y="${C+18}" text-anchor="middle" fill="var(--muted)" font-size="12">correct</text></svg>`+
+    `<div class="pielabel">${legend}</div>`;
 }
 function showReview(){
   let html='';
