@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Salesforce Platform Administrator Practice Exam</title>
+<title>Salesforce Platform Administrator — Practice Exam</title>
 <style>
-  :root{
-    --bg:#0b1220; --panel:#13203a; --ink:#e8edf7; --muted:#9aa7c0;
-    --accent:#00a1e0; --accent2:#2ecc71; --warn:#f59e0b; --bad:#ef4444;
-    --line:#27324d;
-  }
+  :root{ --bg:#0f1424; --panel:#172033; --ink:#e8edf7; --muted:#9aa7c0;
+    --accent:#3b82f6; --accent2:#22c55e; --warn:#f59e0b; --bad:#ef4444; --line:#283248; }
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:var(--bg);color:var(--ink);line-height:1.5;padding:24px}
@@ -19,33 +16,38 @@
   .meta{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
   .pill{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.8rem;color:var(--muted)}
   .q{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:18px;margin-bottom:16px}
-  .q h3{margin:0 0 12px;font-size:1.02rem;display:flex;gap:10px;align-items:baseline}
+  .qnav{font-size:.8rem;color:var(--muted);margin-bottom:10px}
+  .q h3{margin:0 0 12px;font-size:1.02rem;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
   .dom{font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);border:1px solid var(--line);padding:2px 8px;border-radius:6px;white-space:nowrap}
   .opt{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:8px 0;cursor:pointer;transition:.12s}
   .opt:hover{border-color:var(--accent)}
   .opt input{margin-right:10px}
-  .opt.correct{background:rgba(46,204,113,.14);border-color:var(--accent2)}
+  .opt.correct{background:rgba(34,197,94,.14);border-color:var(--accent2)}
   .opt.wrong{background:rgba(239,68,68,.14);border-color:var(--bad)}
   .opt.chosen{border-color:var(--accent)}
   .reveal{margin-top:10px;font-size:.85rem;background:transparent;border:1px solid var(--line);color:var(--ink);padding:6px 12px;border-radius:8px;cursor:pointer}
   .reveal:hover{border-color:var(--accent)}
   .exp{margin-top:10px;font-size:.86rem;color:var(--muted);display:none;border-top:1px dashed var(--line);padding-top:10px}
   .exp.show{display:block}
+  .qcontrols{display:flex;gap:12px;align-items:center;margin-top:14px}
+  .qcontrols .spacer{flex:1}
   .bar{display:flex;gap:12px;justify-content:space-between;align-items:center;margin:10px 0 24px;flex-wrap:wrap}
   button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:12px 22px;font-size:1rem;cursor:pointer}
   button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  button:disabled{opacity:.4;cursor:default}
   .score{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;display:none}
   .score.show{display:block}
   .score h2{margin:0 0 8px}
   .big{font-size:2.4rem;font-weight:700}
   .break{margin-top:14px}
   .break div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:.9rem}
-  .rec{display:none;margin-top:16px;border:1px solid var(--accent);border-radius:12px;padding:14px 16px;background:rgba(0,161,224,.08)}
+  .rec{display:none;margin-top:16px;border:1px solid var(--accent);border-radius:12px;padding:14px 16px;background:rgba(59,130,246,.08)}
   .rec.show{display:block}
   .rec h3{margin:0 0 8px;font-size:1rem;color:var(--accent)}
   .rec ul{margin:6px 0 0;padding-left:18px}
   .rec li{margin:4px 0;font-size:.88rem;color:var(--ink)}
   .legend{font-size:.8rem;color:var(--muted);margin-top:8px}
+  #review{margin-top:20px}
   a{color:var(--accent)}
   footer{margin-top:30px;color:var(--muted);font-size:.8rem;text-align:center}
 </style>
@@ -67,9 +69,8 @@
     <span class="pill">Pass = 68%</span>
     <span class="pill">105 min</span>
   </div>
-
   <div class="bar">
-    <button id="grade">Grade exam</button>
+    <button id="grade">End exam</button>
     <button id="reset" class="ghost">Reset</button>
     <span id="progress" class="pill">Answered 0 / 70</span>
     <span class="pill" style="margin-left:auto">Mode:
@@ -78,21 +79,18 @@
     </span>
     <span id="timer" class="pill" style="display:none">&#9201; <span id="time">00:00</span></span>
   </div>
-
   <div id="quiz"></div>
-
+  <div id="review" style="display:none"></div>
   <div class="score" id="score">
     <h2>Result</h2>
     <div class="big"><span id="scnum">0</span><span style="font-size:1rem;color:var(--muted)"> / 70</span></div>
     <div id="verdict" class="legend"></div>
     <div class="break" id="breakdown"></div>
     <div id="recommend" class="rec"></div>
-    <div class="legend">Salesforce's official Practice Test is taken in Webassessor; use this to self-audit weak domains. Exam aligns to Summer '25; pass mark 68%.</div>
+    <div class="legend">Self-made practice set, not an official assessment. Use to self-audit weak domains.</div>
   </div>
-
   <footer>Built from the official Platform Administrator exam outline. Guide: <a href="https://help.salesforce.com/s/articleView?id=005298966" target="_blank" rel="noopener">Salesforce Exam Guide</a></footer>
 </div>
-
 <script>
 const DOMAINS = {
   C:{label:"Configuration & Setup", range:""},
@@ -361,103 +359,85 @@ const Q = [
   {d:"G",q:"Before publishing an agent you should:",
    o:["Skip testing","Preview conversations / light test in Agent Builder","Delete prompts","Disable sharing"],
    a:1,exp:"Agent Builder supports conversation preview and light testing before release."},
-];const quiz = document.getElementById('quiz');
+];
+
+const quiz = document.getElementById('quiz');
 const progress = document.getElementById('progress');
 const chosen = new Array(Q.length).fill(null);
-
+let current = 0;
 function getMode(){ return document.querySelector('input[name=mode]:checked').value; }
-function render(){
+function renderCurrent(){
   const exam = getMode()==='exam';
-  quiz.innerHTML = Q.map((item,i)=>{
-    const opts = item.o.map((txt,j)=>`
-      <label class="opt" data-q="${i}" data-o="${j}">
-        <input type="radio" name="q${i}" value="${j}"> ${String.fromCharCode(65+j)}. ${txt}
-      </label>`).join('');
-    const revealBtn = exam ? '' : `<button class="reveal" data-reveal="${i}">Reveal answer</button>`;
-    return `<div class="q">
-      <h3><span class="dom">${DOMAINS[item.d].label}</span> Q${i+1}. ${item.q}</h3>
-      ${opts}
-      ${revealBtn}
-      <div class="exp" id="exp${i}">${item.exp}</div>
-    </div>`;
-  }).join('');
-  quiz.querySelectorAll('input[type=radio]').forEach(r=>{
-    r.addEventListener('change',e=>{
-      const qi=+e.target.closest('.opt').dataset.q, oi=+e.target.closest('.opt').dataset.o;
-      chosen[qi]=oi; updateProgress();
-    });
+  const item = Q[current];
+  const opts = item.o.map((txt,j)=>
+    `<label class="opt" data-o="${j}"><input type="radio" name="cur" value="${j}" ${chosen[current]===j?'checked':''}> ${String.fromCharCode(65+j)}. ${txt}</label>`).join('');
+  const revealBtn = exam ? '' : `<button class="reveal" id="revealBtn">Reveal answer</button>`;
+  quiz.innerHTML =
+    `<div class="qnav">Question ${current+1} of ${Q.length}</div>` +
+    `<div class="q"><h3><span class="dom">${DOMAINS[item.d].label}</span> Q${current+1}. ${item.q}</h3>` +
+    opts + revealBtn +
+    `<div class="exp" id="exp">${item.exp}</div></div>` +
+    `<div class="qcontrols"><button id="prev" class="ghost" ${current===0?'disabled':''}>Back</button>` +
+    `<span class="spacer"></span><button id="next">${current===Q.length-1?'Review / End':'Next'}</button></div>`;
+  quiz.querySelectorAll('input[name=cur]').forEach(r=>{
+    r.addEventListener('change',e=>{ chosen[current]=+e.target.value; updateProgress(); });
   });
-  quiz.querySelectorAll('.reveal').forEach(b=>{
-    b.addEventListener('click',e=>{ reveal(+e.target.dataset.reveal); });
-  });
+  const rb=document.getElementById('revealBtn');
+  if(rb) rb.addEventListener('click',revealCurrent);
+  document.getElementById('prev').addEventListener('click',()=>{ if(current>0){current--;renderCurrent();} });
+  document.getElementById('next').addEventListener('click',()=>{ if(current===Q.length-1){ endExam(); } else { current++; renderCurrent(); } });
 }
-function reveal(i){
-  const item=Q[i];
-  const opts=quiz.querySelectorAll(`.opt[data-q="${i}"]`);
-  opts.forEach(o=>{
+function revealCurrent(){
+  const item=Q[current];
+  quiz.querySelectorAll('.opt').forEach(o=>{
     const oi=+o.dataset.o;
     if(oi===item.a) o.classList.add('correct');
-    if(chosen[i]===oi && oi!==item.a) o.classList.add('wrong');
+    if(chosen[current]===oi && oi!==item.a) o.classList.add('wrong');
   });
-  document.getElementById('exp'+i).classList.add('show');
-  const btn=quiz.querySelector(`.reveal[data-reveal="${i}"]`);
-  if(btn){ btn.disabled=true; btn.textContent='Answer shown'; }
+  document.getElementById('exp').classList.add('show');
+  const rb=document.getElementById('revealBtn'); if(rb){ rb.disabled=true; rb.textContent='Answer shown'; }
 }
 function updateProgress(){
-  progress.textContent = `Answered ${chosen.filter(x=>x!==null).length} / ${Q.length}`;
+  const answered = chosen.filter(x=>x!==null).length;
+  progress.textContent = `Answered ${answered} / ${Q.length}`;
 }
-function grade(){
-  let correct=0;
-  const dom={C:{t:0,c:0},O:{t:0,c:0},S:{t:0,c:0},V:{t:0,c:0},P:{t:0,c:0},D:{t:0,c:0},A:{t:0,c:0},G:{t:0,c:0}};
-  Q.forEach((item,i)=>{
-    dom[item.d].t++;
-    const opts=quiz.querySelectorAll(`.opt[data-q="${i}"]`);
-    opts.forEach(o=>{
-      const oi=+o.dataset.o;
-      o.classList.remove('correct','wrong','chosen');
-      if(oi===item.a) o.classList.add('correct');
-      if(chosen[i]===oi && oi!==item.a) o.classList.add('wrong');
-      if(chosen[i]===oi) o.classList.add('chosen');
-    });
-    document.getElementById('exp'+i).classList.add('show');
-    if(chosen[i]===item.a){correct++;dom[item.d].c++;}
-  });
+function endExam(){
+  stopTimer();
+  let correct=0; const dom={};
+  Object.keys(DOMAINS).forEach(k=>dom[k]={t:0,c:0});
+  Q.forEach((item,i)=>{ dom[item.d].t++; if(chosen[i]===item.a){ correct++; dom[item.d].c++; } });
   const pct=Math.round(correct/Q.length*100);
   const sc=document.getElementById('score'); sc.classList.add('show');
   document.getElementById('scnum').textContent=correct;
   document.getElementById('verdict').textContent =
-    pct>=68 ? `Pass likely (${pct}%, pass mark 68%).` :
-    `Below pass mark (${pct}%, need 68%). Review your weak area.`;
+    pct>=68 ? `Pass likely (${pct}%, pass mark 68%).` : `Below pass mark (${pct}%, need 68%). Review your weak area.`;
   const bd=document.getElementById('breakdown');
-  bd.innerHTML = Object.entries(DOMAINS).map(([k,v])=>{
-    const d=dom[k];
-    return '<div><span>'+v.label+'</span><span>'+d.c+' / '+d.t+' correct</span></div>';
-  }).join('');
+  bd.innerHTML = Object.entries(DOMAINS).map(([k,v])=> '<div><span>'+v.label+'</span><span>'+dom[k].c+' / '+dom[k].t+' correct</span></div>').join('');
   let weak=null, weakPct=101;
-  Object.keys(dom).forEach(k=>{
-    const d=dom[k]; const p = d.t ? (d.c/d.t*100) : 100;
-    if(p < weakPct){ weak=k; weakPct=p; }
-  });
-  const rec=document.getElementById('recommend');
-  const g=STUDYGUIDE[weak];
-  let lis=''; g.points.forEach(p=>{ lis += '<li>'+p+'</li>'; });
-  rec.innerHTML = '<h3>Focus area: '+g.title+' &mdash; '+dom[weak].c+'/'+dom[weak].t+' correct ('+Math.round(weakPct)+'%)</h3>'+
-    '<div style="font-size:.85rem;color:var(--muted);margin-bottom:6px">Key points to study:</div><ul>'+lis+'</ul>';
+  Object.keys(dom).forEach(k=>{ const d=dom[k]; const p=d.t?(d.c/d.t*100):100; if(p<weakPct){weak=k;weakPct=p;} });
+  const rec=document.getElementById('recommend'); const g=STUDYGUIDE[weak];
+  let lis=''; g.points.forEach(p=>{ lis+='<li>'+p+'</li>'; });
+  rec.innerHTML = '<h3>Focus area: '+g.title+' &mdash; '+dom[weak].c+'/'+dom[weak].t+' correct ('+Math.round(weakPct)+'%)</h3><div style="font-size:.85rem;color:var(--muted);margin-bottom:6px">Key points to study:</div><ul>'+lis+'</ul>';
   rec.classList.add('show');
   sc.scrollIntoView({behavior:'smooth'});
+  showReview();
+}
+function showReview(){
+  let html='';
+  Q.forEach((item,i)=>{
+    const opts=item.o.map((txt,j)=>{ let cls='opt'; if(j===item.a) cls+=' correct'; else if(chosen[i]===j) cls+=' wrong'; return `<div class="${cls}">${String.fromCharCode(65+j)}. ${txt}</div>`; }).join('');
+    html += `<div class="q"><h3><span class="dom">${DOMAINS[item.d].label}</span> Q${i+1}. ${item.q}</h3>`+opts+`<div class="exp show">${item.exp}</div></div>`;
+  });
+  const rv=document.getElementById('review'); rv.innerHTML=html; rv.style.display='block'; rv.scrollIntoView({behavior:'smooth'});
 }
 function reset(){
-  chosen.fill(null);
-  quiz.querySelectorAll('input[type=radio]').forEach(r=>r.checked=false);
-  quiz.querySelectorAll('.opt').forEach(o=>o.classList.remove('correct','wrong','chosen'));
-  quiz.querySelectorAll('.exp').forEach(e=>e.classList.remove('show'));
+  chosen.fill(null); current=0;
   document.getElementById('score').classList.remove('show');
   document.getElementById('recommend').classList.remove('show');
-  render(); updateProgress();
+  const rv=document.getElementById('review'); rv.style.display='none'; rv.innerHTML='';
+  renderCurrent(); updateProgress();
 }
-function syncGradeLabel(){
-  document.getElementById('grade').textContent = getMode()==='exam' ? 'Submit exam' : 'Grade exam';
-}
+function syncGradeLabel(){ document.getElementById('grade').textContent='End exam'; }
 let timerId=null, timerLeft=0;
 const EXAM_MINUTES=105;
 function fmt(s){ const m=Math.floor(s/60), ss=s%60; return String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0'); }
@@ -466,21 +446,13 @@ function startTimer(){
   stopTimer();
   const tEl=document.getElementById('timer'), timeEl=document.getElementById('time');
   if(getMode()!=='exam'){ tEl.style.display='none'; return; }
-  tEl.style.display='';
-  timerLeft=EXAM_MINUTES*60;
-  timeEl.textContent=fmt(timerLeft);
-  timerId=setInterval(()=>{
-    timerLeft--;
-    timeEl.textContent=fmt(timerLeft);
-    if(timerLeft<=0){ stopTimer(); grade(); }
-  },1000);
+  tEl.style.display=''; timerLeft=EXAM_MINUTES*60; timeEl.textContent=fmt(timerLeft);
+  timerId=setInterval(()=>{ timerLeft--; timeEl.textContent=fmt(timerLeft); if(timerLeft<=0){ stopTimer(); endExam(); } },1000);
 }
-document.querySelectorAll('input[name=mode]').forEach(r=>{
-  r.addEventListener('change',()=>{ syncGradeLabel(); reset(); startTimer(); });
-});
-document.getElementById('grade').addEventListener('click',()=>{ stopTimer(); grade(); });
+document.querySelectorAll('input[name=mode]').forEach(r=>{ r.addEventListener('change',()=>{ syncGradeLabel(); reset(); startTimer(); }); });
+document.getElementById('grade').addEventListener('click',endExam);
 document.getElementById('reset').addEventListener('click',()=>{ stopTimer(); reset(); startTimer(); });
-render(); updateProgress(); syncGradeLabel(); startTimer();
+renderCurrent(); updateProgress(); syncGradeLabel(); startTimer();
 </script>
 </body>
 </html>
