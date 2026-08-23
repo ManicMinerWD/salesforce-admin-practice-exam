@@ -55,7 +55,7 @@
   <h1>Salesforce Platform Administrator — Practice Exam</h1>
   <div class="sub">Salesforce Certified: Platform Administrator (CRT-101 / ADM-201). Self-made practice set grounded in the official exam outline (Summer '25). Not an official Salesforce asset.</div>
   <div class="meta">
-    <span class="pill">35 questions</span>
+    <span class="pill">70 questions</span>
     <span class="pill">Config &amp; Setup 15%</span>
     <span class="pill">Object Manager 15%</span>
     <span class="pill">Sales/Mktg 10%</span>
@@ -71,7 +71,7 @@
   <div class="bar">
     <button id="grade">Grade exam</button>
     <button id="reset" class="ghost">Reset</button>
-    <span id="progress" class="pill">Answered 0 / 35</span>
+    <span id="progress" class="pill">Answered 0 / 70</span>
     <span class="pill" style="margin-left:auto">Mode:
       <label><input type="radio" name="mode" value="study" checked> Study</label>
       <label><input type="radio" name="mode" value="exam"> Exam</label>
@@ -83,7 +83,7 @@
 
   <div class="score" id="score">
     <h2>Result</h2>
-    <div class="big"><span id="scnum">0</span><span style="font-size:1rem;color:var(--muted)"> / 35</span></div>
+    <div class="big"><span id="scnum">0</span><span style="font-size:1rem;color:var(--muted)"> / 70</span></div>
     <div id="verdict" class="legend"></div>
     <div class="break" id="breakdown"></div>
     <div id="recommend" class="rec"></div>
@@ -256,8 +256,112 @@ const Q = [
   {d:"G",q:"To refine an agent's behavior before release, you update its prompts/instructions in:",
    o:["Setup Audit Trail","Data Loader","Agent Builder (with conversation preview / light testing)","A dashboard"],
    a:2,exp:"Agent Builder is where you maintain prompts/instructions and preview conversations."},
-];
-const quiz = document.getElementById('quiz');
+  {d:"C",q:"A user forgets their password and is locked out. As admin you:",
+   o:["Delete and recreate the user","Change their profile","Remove their role","Reset their password / unlock via user record"],
+   a:3,exp:"Admins reset passwords and unlock users from the user record; don't delete users."},
+  {d:"C",q:"You must log every configuration change for compliance. Enable:",
+   o:["Setup Audit Trail","Debug logs","Data Export","Schema Builder"],
+   a:0,exp:"Setup Audit Trail records config changes with user/timestamp."},
+  {d:"C",q:"A permission set group is used to:",
+   o:["Replace a profile entirely","Bundle multiple permission sets for assignment","Delete a user","Set the fiscal year"],
+   a:1,exp:"Permission set groups bundle permission sets for easier assignment."},
+  {d:"C",q:"To stop login outside 9-5, configure:",
+   o:["Page layouts","Record types","Login Hours (and Login IP ranges)","A report folder"],
+   a:2,exp:"Login Hours restrict when users can log in."},
+  {d:"C",q:"Multi-currency is required before you can enable:",
+   o:["Territory management","Fiscal year","Lead assignment","Advanced Currency Management (dated rates)"],
+   a:3,exp:"Advanced Currency Management (dated exchange rates) requires multi-currency first."},
+  {d:"O",q:"Deleting a field used by a roll-up summary will:",
+   o:["Break the roll-up summary","Have no effect","Create a new field","Move it to another object"],
+   a:0,exp:"Roll-ups depend on the related field; deleting it invalidates them."},
+  {d:"O",q:"A many-to-many relationship is modeled with:",
+   o:["A single lookup","A junction object","A text field","A report type"],
+   a:1,exp:"Junction objects (two master-details) model many-to-many."},
+  {d:"O",q:"Different sales stages per product line use:",
+   o:["A new object","A validation rule","Record types + business processes","A permission set"],
+   a:2,exp:"Record types associate with different business processes (e.g. sales/support)."},
+  {d:"O",q:"Schema Builder is used to:",
+   o:["Send emails","Build dashboards","Assign licenses","Visualize and create object/field relationships"],
+   a:3,exp:"Schema Builder visually models objects, fields, and relationships."},
+  {d:"O",q:"Master-detail child records inherit:",
+   o:["Sharing/security from the parent","Their own independent sharing only","A new profile","Campaign membership"],
+   a:0,exp:"In master-detail, children inherit the parent's sharing."},
+  {d:"S",q:"Lead scoring (Einstein) predicts:",
+   o:["The fiscal quarter","Likelihood a lead converts","Currency rates","Report visibility"],
+   a:1,exp:"Lead scoring predicts conversion likelihood."},
+  {d:"S",q:"Web-to-Lead captures submissions and creates:",
+   o:["Cases","Campaigns","Lead records","Dashboards"],
+   a:2,exp:"Web-to-Lead generates Lead records from website forms."},
+  {d:"S",q:"Territory management helps with:",
+   o:["Email templates","Mobile branding","Data export","Assigning accounts/opportunities by geography or criteria"],
+   a:3,exp:"Territory management assigns records based on dimensions like geography."},
+  {d:"S",q:"Forecasting in sales is based on:",
+   o:["Opportunity stages/amounts","Lead scores only","Campaign members","Cases"],
+   a:0,exp:"Forecasts roll up from opportunity amounts/stages."},
+  {d:"V",q:"Cases routed to a team queue use:",
+   o:["Lead scoring","Case assignment rules + queues","Approval steps","Validation rules"],
+   a:1,exp:"Case assignment rules send cases to queues/owners."},
+  {d:"V",q:"Entitlements are used to:",
+   o:["Assign leads","Build reports","Define support SLAs/terms for customers","Brand the mobile app"],
+   a:2,exp:"Entitlements capture support agreements/SLA terms."},
+  {d:"V",q:"Macros help agents:",
+   o:["Delete users","Build flows","Set currencies","Perform repetitive tasks (e.g. send email + update field) in one click"],
+   a:3,exp:"Macros chain common actions for support agents."},
+  {d:"V",q:"A support process defines:",
+   o:["The case status values/stages","The sales stages","Lead assignment","Report types"],
+   a:0,exp:"Support processes define case status picklist values per record type."},
+  {d:"P",q:"Chatter external users are:",
+   o:["Full CRM users","Customers/partners invited to specific groups","System admins only","Report viewers"],
+   a:1,exp:"External users (Customers/Partners) can be invited to Chatter groups."},
+  {d:"P",q:"The Salesforce mobile app branding is configured in:",
+   o:["Schema Builder","Data Loader","Mobile app settings (branding, launchpad)","Lead assignment"],
+   a:2,exp:"Mobile app settings control branding, launchpad, and visibility."},
+  {d:"P",q:"Global actions appear:",
+   o:["Only on one record","In reports","In dashboards","Across all objects (e.g. global quick create)"],
+   a:3,exp:"Global actions are available regardless of the current record."},
+  {d:"P",q:"An unmanaged package is:",
+   o:["Editable by the installer, not upgradeable by publisher","A managed, upgradeable app","A permission set","A flow"],
+   a:0,exp:"Unmanaged packages can be edited by the installer and aren't upgraded by the publisher."},
+  {d:"D",q:"To update 200k records with a CSV and automation, use:",
+   o:["Report export","Data Loader (API)","Dashboard refresh","List view"],
+   a:1,exp:"Data Loader handles large-volume API imports/updates."},
+  {d:"D",q:"Matching rules work with:",
+   o:["Page layouts","Role hierarchy","Duplicate rules to detect duplicates","AppExchange"],
+   a:2,exp:"Matching rules define how duplicates are identified, used by duplicate rules."},
+  {d:"D",q:"A cross-filter on a report excludes records that:",
+   o:["Are in a bucket","Are grouped","Have a chart","Have (or don't have) related records meeting criteria"],
+   a:3,exp:"Cross filters include/exclude records based on related records."},
+  {d:"D",q:"A joined report combines:",
+   o:["Multiple report blocks side by side","Two fields in one row","A dashboard and a report","An object and a picklist"],
+   a:0,exp:"Joined reports display multiple report types as blocks."},
+  {d:"D",q:"'View dashboard as' running user makes a dashboard:",
+   o:["Static only","Dynamic (respects viewer's access) or fixed user","A report","A list view"],
+   a:1,exp:"Dynamic dashboards run as the viewer; setting a running user fixes visibility."},
+  {d:"D",q:"Data export (weekly/monthly) is for:",
+   o:["Building dashboards","Assigning leads","Backup/archival of org data","Mobile branding"],
+   a:2,exp:"Data Export provides periodic backup of org data."},
+  {d:"A",q:"A before-save record-triggered flow is efficient because it:",
+   o:["Sends an email only","Runs on a schedule","Needs a screen","Runs in the save before the record is committed"],
+   a:3,exp:"Before-save (fast field) flows update in the save transaction without extra DML."},
+  {d:"A",q:"Autolaunched flows are:",
+   o:["Called by other automation (no UI)","Always screen flows","Only scheduled","Case assignment rules"],
+   a:0,exp:"Autolaunched flows run without a UI, invoked by other processes."},
+  {d:"A",q:"The default automation user runs:",
+   o:["Lead conversion","Flows/automation when no specific user context","Reports","Macros"],
+   a:1,exp:"The default automation user provides context for background automation."},
+  {d:"A",q:"Approval steps can include:",
+   o:["Only one fixed approver","A screen flow","Multiple approvers, criteria, and reassignments","A validation rule"],
+   a:2,exp:"Approval processes support multi-step approvers and criteria."},
+  {d:"A",q:"Order of execution determines:",
+   o:["Report grouping","Mobile layout","AppExchange install","When validation, flows, and assignment rules fire in a save"],
+   a:3,exp:"The order of execution sequences save-time automation."},
+  {d:"G",q:"Agentforce agents require:",
+   o:["Proper permissions and security configuration","No permissions","Deletion of users","A report type"],
+   a:0,exp:"Agentforce needs agent permissions/security set correctly."},
+  {d:"G",q:"Before publishing an agent you should:",
+   o:["Skip testing","Preview conversations / light test in Agent Builder","Delete prompts","Disable sharing"],
+   a:1,exp:"Agent Builder supports conversation preview and light testing before release."},
+];const quiz = document.getElementById('quiz');
 const progress = document.getElementById('progress');
 const chosen = new Array(Q.length).fill(null);
 
